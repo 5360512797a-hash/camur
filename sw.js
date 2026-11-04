@@ -1,15 +1,16 @@
 // Çevrimdışı önbellek. Uygulamayı güncellediğinde VERSION değerini artır.
-const VERSION = 'camur-v1';
-const FILES = ['./', './index.html', './core.js', './app.js', './manifest.json', './icon-180.png', './icon-192.png', './icon-512.png',
+const VERSION = 'sondaj-v5';
+const FILES = ['./', './index.html', './app.js', './manifest.json', './icon-180.png', './icon-192.png', './icon-512.png',
   './xlsx.full.min.js', './pdf.min.js', './pdf.worker.min.js'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
 });
-// Sadece bu uygulamanın eski önbelleklerini sil; aynı GitHub adresindeki Sondaj uygulamasına dokunma.
+
 self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k.startsWith('camur-') && k !== VERSION).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== VERSION).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
+
 // Önce ağdan dene (güncel sürüm), ağ yoksa önbellekten aç.
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
